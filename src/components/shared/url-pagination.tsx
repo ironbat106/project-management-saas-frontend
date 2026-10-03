@@ -5,20 +5,33 @@ import { Button } from "@/components/ui/button";
 import { useUrlParams } from "@/hooks/url-state.hook";
 import type { Meta } from "@/types";
 
-function pageList(current: number, total: number): (number | "gap")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1);
-  if (current <= 4) return [1, 2, 3, 4, 5, "gap", total];
-  if (current >= total - 3)
-    return [1, "gap", total - 4, total - 3, total - 2, total - 1, total];
-  return [1, "gap", current - 1, current, current + 1, "gap", total];
+type PageItem = number | "gap-start" | "gap-end";
+
+function pageList(current: number, total: number): PageItem[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+
+  if (current <= 4) {
+    return [1, 2, 3, 4, 5, "gap-end", total];
+  }
+
+  if (current >= total - 3) {
+    return [1, "gap-start", total - 4, total - 3, total - 2, total - 1, total];
+  }
+
+  return [1, "gap-start", current - 1, current, current + 1, "gap-end", total];
 }
 
+// Page buttons that write ?page=2 into the URL.
 export function UrlPagination({ meta }: { meta?: Meta }) {
   const { setParams } = useUrlParams();
 
   if (!meta || meta.totalPages <= 1) return null;
 
-  const go = (page: number) => setParams({ page }, { keepPage: true });
+  const go = (page: number) => {
+    setParams({ page }, { keepPage: true });
+  };
 
   return (
     <nav
@@ -28,6 +41,7 @@ export function UrlPagination({ meta }: { meta?: Meta }) {
       <p className="text-sm text-muted-foreground">
         Page {meta.page} of {meta.totalPages}, {meta.total} results
       </p>
+
       <div className="flex items-center gap-1">
         <Button
           variant="outline"
@@ -38,10 +52,11 @@ export function UrlPagination({ meta }: { meta?: Meta }) {
           <ChevronLeft aria-hidden="true" />
           Previous
         </Button>
-        {pageList(meta.page, meta.totalPages).map((item, index) =>
-          item === "gap" ? (
+
+        {pageList(meta.page, meta.totalPages).map((item) =>
+          typeof item === "string" ? (
             <span
-              key={`gap-${index}`}
+              key={item}
               className="px-1 text-muted-foreground"
               aria-hidden="true"
             >
@@ -59,6 +74,7 @@ export function UrlPagination({ meta }: { meta?: Meta }) {
             </Button>
           ),
         )}
+
         <Button
           variant="outline"
           size="sm"

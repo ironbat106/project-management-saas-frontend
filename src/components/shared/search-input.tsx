@@ -6,16 +6,19 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/debounce.hook";
 import { useUrlParams } from "@/hooks/url-state.hook";
 
+// The text is kept in the URL as ?q=... so the view can be shared.
 export function SearchInput({ placeholder }: { placeholder: string }) {
   const { searchParams, setParams } = useUrlParams();
   const urlValue = searchParams.get("q") ?? "";
   const [text, setText] = useState(urlValue);
   const debounced = useDebounce(text, 400);
 
+  // Keep the box in step if the URL changes (back button, reset).
   useEffect(() => {
     setText(urlValue);
   }, [urlValue]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only react to typing
   useEffect(() => {
     if (debounced !== urlValue) setParams({ q: debounced || undefined });
   }, [debounced]);

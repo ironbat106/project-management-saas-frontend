@@ -110,7 +110,6 @@ function ProjectWizard({
     if (!isEdit) setDraft({ step, values });
   }, [isEdit, step, values, setDraft]);
 
-
   async function next() {
     const names = ["name", "description"] as const;
 

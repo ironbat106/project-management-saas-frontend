@@ -66,7 +66,6 @@ export function useCreateTask(projectId: string) {
   });
 }
 
-
 export function useUpdateTaskStatus() {
   const client = useQueryClient();
 

@@ -45,7 +45,6 @@ async function signIn(
 
   await setSession(login.data);
 
-
   const me = await backendFetch<User>("/users/me", {
     token: login.data.accessToken,
   });
@@ -110,7 +109,6 @@ export async function registerAction(
 export async function logoutAction() {
   const accessToken = await getAccessToken();
   const refreshToken = await getRefreshToken();
-
 
   if (accessToken && refreshToken) {
     try {

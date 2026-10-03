@@ -7,7 +7,6 @@ import { ROLE_HOME } from "@/lib/constants";
 import { serverRequest } from "@/lib/request-server";
 import type { Role } from "@/types";
 
-
 export const getCurrentUser = cache(async () => {
   try {
     const response = await userApi.me(serverRequest);

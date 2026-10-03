@@ -7,7 +7,6 @@ export interface TokenClaims {
   exp: number;
 }
 
-
 export function readClaims(token?: string): TokenClaims | null {
   if (!token) return null;
 

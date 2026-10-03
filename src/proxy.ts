@@ -78,7 +78,6 @@ export async function proxy(request: NextRequest) {
         new URL(ROLE_HOME[claims.role], request.url),
       );
     } else if (isAuthPage && isLoggedIn && claims) {
-
       if (!request.nextUrl.searchParams.has("reason")) {
         response = NextResponse.redirect(
           new URL(ROLE_HOME[claims.role], request.url),
